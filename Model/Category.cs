@@ -6,6 +6,6 @@
         public string Name { get; set; }
 
         // Liên kết với Product
-        public List<Product> Products { get; set; }
+        //public List<Product> Products { get; set; }
     }
 }

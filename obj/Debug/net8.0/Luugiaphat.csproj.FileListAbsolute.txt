@@ -169,3 +169,5 @@ F:\asp.net\Luugiaphat\Luugiaphat\obj\Debug\net8.0\refint\Luugiaphat.dll
 F:\asp.net\Luugiaphat\Luugiaphat\obj\Debug\net8.0\Luugiaphat.pdb
 F:\asp.net\Luugiaphat\Luugiaphat\obj\Debug\net8.0\Luugiaphat.genruntimeconfig.cache
 F:\asp.net\Luugiaphat\Luugiaphat\obj\Debug\net8.0\ref\Luugiaphat.dll
+F:\asp.net\Luugiaphat\Luugiaphat\obj\Debug\net8.0\Luugiaphat.sourcelink.json
+F:\asp.net\Luugiaphat\Luugiaphat\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
