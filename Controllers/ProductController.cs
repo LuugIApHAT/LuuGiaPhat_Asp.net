@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Luugiaphat.Model;
 using Luugiaphat.Data;
-using Microsoft.EntityFrameworkCore;  // Đảm bảo bạn sử dụng namespace AppDbContext
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Luugiaphat.Controllers
 {
@@ -20,7 +23,6 @@ namespace Luugiaphat.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> Get()
         {
-            // Lấy tất cả sản phẩm từ cơ sở dữ liệu
             var products = await _context.Products.ToListAsync();
             return Ok(products);
         }
@@ -29,7 +31,6 @@ namespace Luugiaphat.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> Get(int id)
         {
-            // Lấy sản phẩm theo ID từ cơ sở dữ liệu
             var product = await _context.Products.FindAsync(id);
 
             if (product == null)
@@ -40,66 +41,61 @@ namespace Luugiaphat.Controllers
             return Ok(product);
         }
 
-        // POST: api/product
+        // POST: api/product (Thêm sản phẩm)
         [HttpPost]
-        public async Task<ActionResult<Product>> Post(Product product)
+        public async Task<ActionResult<Product>> Post([FromBody] Product product)
         {
-            _context.Products.Add(product);  // Thêm sản phẩm vào DbContext
-            await _context.SaveChangesAsync();  // Lưu thay đổi vào cơ sở dữ liệu
+            if (product == null || string.IsNullOrWhiteSpace(product.Name) || product.Price <= 0)
+            {
+                return BadRequest("Invalid product data"); // Kiểm tra dữ liệu đầu vào
+            }
 
-            return CreatedAtAction(nameof(Get), new { id = product.ID }, product);  // Trả về thông tin sản phẩm vừa tạo
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(Get), new { id = product.ID }, product);
         }
 
-        // PUT: api/product/5
+        // PUT: api/product/5 (Cập nhật sản phẩm)
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Product product)
+        public async Task<IActionResult> Put(int id, [FromBody] Product product)
         {
             if (id != product.ID)
             {
-                return BadRequest();  // Trả về lỗi 400 nếu ID không khớp
+                return BadRequest("Product ID mismatch");
             }
 
-            _context.Entry(product).State = EntityState.Modified;  // Đánh dấu sản phẩm là đã thay đổi
-            try
+            var existingProduct = await _context.Products.FindAsync(id);
+            if (existingProduct == null)
             {
-                await _context.SaveChangesAsync();  // Lưu thay đổi vào cơ sở dữ liệu
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(id))
-                {
-                    return NotFound();  // Trả về lỗi 404 nếu sản phẩm không tồn tại
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();  // Trả về lỗi 404 nếu không tìm thấy sản phẩm
             }
 
-            return NoContent();  // Trả về mã 204 khi cập nhật thành công
+            existingProduct.Name = product.Name;
+            existingProduct.Price = product.Price;
+            existingProduct.Image = product.Image;
+
+            _context.Entry(existingProduct).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // Trả về mã 204 khi cập nhật thành công
         }
 
         // DELETE: api/product/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var product = await _context.Products.FindAsync(id);  // Tìm sản phẩm theo ID
+            var product = await _context.Products.FindAsync(id);
 
             if (product == null)
             {
-                return NotFound();  // Trả về lỗi 404 nếu không tìm thấy sản phẩm
+                return NotFound();
             }
 
-            _context.Products.Remove(product);  // Xóa sản phẩm khỏi DbContext
-            await _context.SaveChangesAsync();  // Lưu thay đổi vào cơ sở dữ liệu
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
 
-            return NoContent();  // Trả về mã 204 khi xóa thành công
-        }
-
-        // Kiểm tra sự tồn tại của sản phẩm
-        private bool ProductExists(int id)
-        {
-            return _context.Products.Any(e => e.ID == id);  // Kiểm tra sản phẩm có tồn tại hay không
+            return NoContent();
         }
     }
 }

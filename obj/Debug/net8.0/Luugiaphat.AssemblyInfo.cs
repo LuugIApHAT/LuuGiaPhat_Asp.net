@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Luugiaphat")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+698ab9260adb616cc29817f25954a49455038e54")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6be11a0c61257a8aba8f20b493dac9564a6b8b4a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Luugiaphat")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Luugiaphat")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
